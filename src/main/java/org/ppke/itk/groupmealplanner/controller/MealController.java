@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
+import static org.springframework.http.MediaType.APPLICATION_PDF_VALUE;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @Slf4j
 @RestController
@@ -29,6 +30,8 @@ public class MealController {
         log.info("Calling GET /meals/{} endpoint", id);
         return mealRepository.findById(id);
     }
+
+    @GetMapping(value = "/meals/{id}", produces =APPLICATION_PDF_VALUE)
 
     @PostMapping("/meals")
     public Meal createMeal(@RequestBody String name, @RequestBody String instructions, @RequestBody Integer approximatedPrice) {

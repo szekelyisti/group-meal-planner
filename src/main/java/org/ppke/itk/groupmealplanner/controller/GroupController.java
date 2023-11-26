@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -22,7 +24,7 @@ public class GroupController {
         return groupRepository.findAll(limit, sort);
     }
 
-    @GetMapping("/groups/{id}")
+    @GetMapping("/groups/{id}", produces = APPLICATION_JSON_VALUE)
     public Group getGroupById(@PathVariable("id") Integer id) {
         log.info("Calling GET /groups endpoint");
         return groupRepository.findById(id);

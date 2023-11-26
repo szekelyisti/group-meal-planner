@@ -6,7 +6,7 @@ import org.ppke.itk.groupmealplanner.domain.User;
 import org.ppke.itk.groupmealplanner.repository.mocks.MockUserRepository;
 import org.springframework.web.bind.annotation.*;
 
-import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @Slf4j
 @RestController

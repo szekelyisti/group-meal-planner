@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -25,7 +27,7 @@ public class IngredientController {
         return ingredientRepository.findAll(limit, sort);
     }
 
-    @GetMapping("/ingredients/{id}")
+    @GetMapping("/ingredients/{id}", produces = APPLICATION_JSON_VALUE)
     public Ingredient getIngredientById(@PathVariable Integer id) {
         log.info("Calling GET /ingredients endpoint");
         return ingredientRepository.findById(id);
