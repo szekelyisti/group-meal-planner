@@ -24,7 +24,7 @@ public class GroupController {
         return groupRepository.findAll(limit, sort);
     }
 
-    @GetMapping("/groups/{id}", produces = APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/groups/{id}", produces = APPLICATION_JSON_VALUE)
     public Group getGroupById(@PathVariable("id") Integer id) {
         log.info("Calling GET /groups endpoint");
         return groupRepository.findById(id);

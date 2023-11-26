@@ -27,7 +27,7 @@ public class IngredientController {
         return ingredientRepository.findAll(limit, sort);
     }
 
-    @GetMapping("/ingredients/{id}", produces = APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/ingredients/{id}", produces = APPLICATION_JSON_VALUE)
     public Ingredient getIngredientById(@PathVariable Integer id) {
         log.info("Calling GET /ingredients endpoint");
         return ingredientRepository.findById(id);
