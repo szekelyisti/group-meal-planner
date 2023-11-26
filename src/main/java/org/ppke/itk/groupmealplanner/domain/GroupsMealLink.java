@@ -1,19 +1,22 @@
 package org.ppke.itk.groupmealplanner.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.util.List;
 
-@Data
-@AllArgsConstructor
+@Getter
+@Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Entity
 public class GroupsMealLink {
 
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Integer id;
         private Integer groupId;
         private Integer mealId;
         private Integer approximatedPrice;
-        private List<String> members;
+        private String members;
 }
