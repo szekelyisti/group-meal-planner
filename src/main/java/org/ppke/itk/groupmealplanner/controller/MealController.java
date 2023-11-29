@@ -7,8 +7,11 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.ppke.itk.groupmealplanner.domain.Meal;
+import org.ppke.itk.groupmealplanner.repository.CustomMealRepository;
 import org.ppke.itk.groupmealplanner.repository.MealRepository;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -29,12 +32,16 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class MealController {
 
     private final MealRepository mealRepository;
+    private final CustomMealRepository customMealRepository;
 
     @GetMapping("/meals")
     public List<Meal> getMeals(@RequestParam(required = false, defaultValue = "100") Integer limit,
                                @RequestParam(required = false, defaultValue = "desc") String sort) {
         log.info("Calling GET /meals endpoint");
-        return mealRepository.findAll(limit, sort);
+
+        var sortParam = sort.equalsIgnoreCase("asc") ? Sort.by(Sort.Direction.ASC, "name") : Sort.by(Sort.Direction.DESC, "name");
+
+        return mealRepository.findAll(PageRequest.of(0, limit, sortParam)).toList();
     }
 
     @GetMapping(value = "/meals/{id}", produces = APPLICATION_JSON_VALUE)
@@ -81,18 +88,18 @@ public class MealController {
     @PostMapping("/meals")
     public Meal createMeal(@RequestBody String name, @RequestBody String instructions, @RequestBody Integer approximatedPrice) {
         log.info("Calling POST /meals endpoint");
-        return mealRepository.saveMeal(name, instructions, approximatedPrice);
+        return customMealRepository.createMeal(name, instructions, approximatedPrice);
     }
 
     @PutMapping("/meals/{id}")
     public Meal updateMeal(@PathVariable("id") Integer id, @RequestBody(required = false) String name, @RequestBody(required = false) String instructions, @RequestBody(required = false) Integer approximatedPrice) {
         log.info("Calling PUT /meals endpoint");
-        return mealRepository.updateMeal(id, name, instructions, approximatedPrice);
+        return customMealRepository.updateMeal(id, name, instructions, approximatedPrice);
     }
 
     @DeleteMapping("/meals/{id}")
     public void deleteMeal(@PathVariable("id") Integer id) {
         log.info("Calling DELETE /meals endpoint");
-        mealRepository.deleteMeal(id);
+        customMealRepository.deleteMeal(id);
     }
 }
