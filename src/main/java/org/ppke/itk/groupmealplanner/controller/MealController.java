@@ -7,7 +7,7 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.ppke.itk.groupmealplanner.domain.Meal;
-import org.ppke.itk.groupmealplanner.repository.mocks.MockMealRepository;
+import org.ppke.itk.groupmealplanner.repository.MealRepository;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -18,6 +18,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.http.MediaType.APPLICATION_PDF_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -27,7 +28,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequiredArgsConstructor
 public class MealController {
 
-    private final MockMealRepository mealRepository;
+    private final MealRepository mealRepository;
 
     @GetMapping("/meals")
     public List<Meal> getMeals(@RequestParam(required = false, defaultValue = "100") Integer limit,
@@ -37,14 +38,14 @@ public class MealController {
     }
 
     @GetMapping(value = "/meals/{id}", produces = APPLICATION_JSON_VALUE)
-    public Meal getMealById(@PathVariable("id") Integer id) {
+    public Optional<Meal> getMealById(@PathVariable("id") Integer id) {
         log.info("Calling GET /meals/{} endpoint", id);
         return mealRepository.findById(id);
     }
 
     @GetMapping(value = "/meals/{id}", produces = APPLICATION_PDF_VALUE)
     public ResponseEntity<InputStreamResource> getMealByIdAsPDF(@PathVariable("id") Integer id) throws IOException {
-        Meal meal = mealRepository.findById(id);
+        Optional<Meal> meal = mealRepository.findById(id);
 
         PDDocument document = new PDDocument();
         PDPage page = new PDPage();
@@ -55,11 +56,11 @@ public class MealController {
         contentStream.beginText();
         contentStream.setFont(PDType1Font.TIMES_ROMAN, 12);
         contentStream.newLineAtOffset(25, 500);
-        contentStream.showText("Meal Name: " + meal.getName());
+        contentStream.showText("Meal Name: " + meal.get().getName());
         contentStream.newLine();
-        contentStream.showText("Meal Instructions: " + meal.getInstructions());
+        contentStream.showText("Meal Instructions: " + meal.get().getInstructions());
         contentStream.newLine();
-        contentStream.showText("Meal Approximated Price: " + meal.getApproximatedPrice());
+        contentStream.showText("Meal Approximated Price: " + meal.get().getApproximatedPrice());
         contentStream.endText();
         contentStream.close();
 

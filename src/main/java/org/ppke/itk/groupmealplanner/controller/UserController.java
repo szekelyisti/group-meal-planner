@@ -3,8 +3,10 @@ package org.ppke.itk.groupmealplanner.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ppke.itk.groupmealplanner.domain.User;
-import org.ppke.itk.groupmealplanner.repository.mocks.MockUserRepository;
+import org.ppke.itk.groupmealplanner.repository.UserRepository;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -13,7 +15,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final MockUserRepository userRepository;
+    private final UserRepository userRepository;
 
     @GetMapping("/users")
     public String getUsers(@RequestParam(required = false, defaultValue = "100") Integer limit,
@@ -23,7 +25,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/users/{id}", produces = APPLICATION_JSON_VALUE)
-    public User getUserById(@PathVariable("id") Integer id) {
+    public Optional<User> getUserById(@PathVariable("id") Integer id) {
         log.info("Calling GET /users endpoint");
         return userRepository.findById(id);
     }
