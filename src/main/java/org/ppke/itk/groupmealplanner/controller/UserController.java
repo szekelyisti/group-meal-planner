@@ -1,5 +1,6 @@
 package org.ppke.itk.groupmealplanner.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ppke.itk.groupmealplanner.domain.User;
@@ -14,6 +15,7 @@ import java.util.Optional;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+@Tag(name = "User")
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -37,20 +39,17 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public User createUser(@RequestBody String name, @RequestBody String email) {
-        log.info("Calling POST /users endpoint");
-        return customUserRepository.createUser(name, email);
+    public void createUser(@RequestBody User user) {
+        userRepository.saveAndFlush(user);
     }
 
     @PutMapping("/users/{id}")
-    public User updateUser(@PathVariable("id") Integer id, @RequestBody(required = false) String name, @RequestBody(required = false) String email) {
-        log.info("Calling PUT /users endpoint");
-        return customUserRepository.updateUser(id, name, email);
+    public User updateUser(@PathVariable("id") Integer id, @RequestBody(required = false) User userUpdate) {
+        return customUserRepository.updateUser(id, userUpdate);
     }
 
     @DeleteMapping("/users/{id}")
     public void deleteUser(@PathVariable("id") Integer id) {
-        log.info("Calling DELETE /users endpoint");
-        customUserRepository.deleteUser(id);
+        userRepository.deleteById(id);
     }
 }

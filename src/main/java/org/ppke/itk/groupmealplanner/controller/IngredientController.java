@@ -1,8 +1,6 @@
 package org.ppke.itk.groupmealplanner.controller;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ppke.itk.groupmealplanner.domain.Ingredient;
@@ -20,6 +18,7 @@ import java.util.Optional;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+@Tag(name = "Ingredient")
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -27,12 +26,6 @@ public class IngredientController {
 
     private final IngredientRepository ingredientRepository;
 
-    @Operation(summary = "Get all ingredients")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Ingredients found"),
-            @ApiResponse(responseCode = "400", description = "Invalid request"),
-            @ApiResponse(responseCode = "404", description = "Ingredients not found")
-    })
     @GetMapping("/ingredients")
     public List<Ingredient> getIngredients(@RequestParam(required = false, defaultValue = "100") Integer limit,
                                            @RequestParam(required = false, defaultValue = "desc") String sort) {

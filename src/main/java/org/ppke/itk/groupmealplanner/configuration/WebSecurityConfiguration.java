@@ -2,7 +2,6 @@ package org.ppke.itk.groupmealplanner.configuration;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -15,7 +14,6 @@ import org.springframework.security.config.annotation.web.configuration. EnableW
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
@@ -34,6 +32,7 @@ public class WebSecurityConfiguration {
         httpSecurity.csrf(csrf ->csrf.disable());
         httpSecurity.authorizeHttpRequests(auth -> auth
                         .requestMatchers( antMatcher (HttpMethod. DELETE )).hasRole("ADMIN")
+                        .requestMatchers( antMatcher ( "/swagger-ui.html")).permitAll()
                         .requestMatchers( antMatcher ( "/meals/**" )).hasAnyRole("USER", "ADMIN")
                         .requestMatchers( antMatcher ( "/groups/**" )).hasAnyRole("USER", "ADMIN")
                         .requestMatchers( antMatcher ( "/users/**" )).hasRole("ADMIN")
@@ -46,12 +45,6 @@ public class WebSecurityConfiguration {
 
         return httpSecurity.build();
     }
-
-//    @Bean
-//    public PasswordEncoder passwordEncoder() {
-//        return NoOpPasswordEncoder.getInstance();
-//
-//    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -68,20 +61,4 @@ public class WebSecurityConfiguration {
                 .passwordEncoder(passwordEncoder());
         return authenticationManagerBuilder.build();
     }
-
-//    @Bean
-//    public AuthenticationManager authManager(HttpSecurity http) throws Exception {
-//        AuthenticationManagerBuilder authenticationManagerBuilder =
-//                http.getSharedObject(AuthenticationManagerBuilder.class);
-//
-//        authenticationManagerBuilder.inMemoryAuthentication()
-//                .withUser("user")
-//                .password(passwordEncoder().encode("user"))
-//                .roles("USER")
-//                .and()
-//                .withUser("admin")
-//                .password(passwordEncoder().encode("admin"))
-//                .roles("ADMIN", "USER");
-//        return authenticationManagerBuilder.build();
-//    }
 }

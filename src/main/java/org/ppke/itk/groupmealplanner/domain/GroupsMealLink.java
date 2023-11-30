@@ -3,13 +3,12 @@ package org.ppke.itk.groupmealplanner.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
-
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(name = "groups_meals_link")
 public class GroupsMealLink {
 
         @Id

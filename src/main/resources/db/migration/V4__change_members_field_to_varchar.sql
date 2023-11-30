@@ -1,0 +1,2 @@
+ALTER TABLE groups
+    ALTER COLUMN members TYPE VARCHAR(255) USING members::VARCHAR(255);

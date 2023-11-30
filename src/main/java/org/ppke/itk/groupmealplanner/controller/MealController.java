@@ -1,5 +1,6 @@
 package org.ppke.itk.groupmealplanner.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -26,6 +27,7 @@ import java.util.Optional;
 import static org.springframework.http.MediaType.APPLICATION_PDF_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+@Tag(name = "Meal")
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -62,11 +64,11 @@ public class MealController {
 
         contentStream.beginText();
         contentStream.setFont(PDType1Font.TIMES_ROMAN, 12);
-        contentStream.newLineAtOffset(25, 500);
+        contentStream.newLineAtOffset(25, 50);
         contentStream.showText("Meal Name: " + meal.get().getName());
-        contentStream.newLine();
-        contentStream.showText("Meal Instructions: " + meal.get().getInstructions());
-        contentStream.newLine();
+        contentStream.newLineAtOffset(25, 50);
+        contentStream.showText("Meal Instructions: " + meal.get().getInstruction());
+        contentStream.newLineAtOffset(25, 50);
         contentStream.showText("Meal Approximated Price: " + meal.get().getApproximatedPrice());
         contentStream.endText();
         contentStream.close();
@@ -86,20 +88,18 @@ public class MealController {
     }
 
     @PostMapping("/meals")
-    public Meal createMeal(@RequestBody String name, @RequestBody String instructions, @RequestBody Integer approximatedPrice) {
-        log.info("Calling POST /meals endpoint");
-        return customMealRepository.createMeal(name, instructions, approximatedPrice);
+    public void createMeal(@RequestBody Meal meal) {
+        mealRepository.saveAndFlush(meal);
     }
 
     @PutMapping("/meals/{id}")
-    public Meal updateMeal(@PathVariable("id") Integer id, @RequestBody(required = false) String name, @RequestBody(required = false) String instructions, @RequestBody(required = false) Integer approximatedPrice) {
+    public Meal updateMeal(@PathVariable("id") Integer id, @RequestBody(required = false) Meal updateMeal) {
         log.info("Calling PUT /meals endpoint");
-        return customMealRepository.updateMeal(id, name, instructions, approximatedPrice);
+        return customMealRepository.updateMeal(id, updateMeal.getName(), updateMeal.getInstruction(), updateMeal.getApproximatedPrice());
     }
 
     @DeleteMapping("/meals/{id}")
     public void deleteMeal(@PathVariable("id") Integer id) {
-        log.info("Calling DELETE /meals endpoint");
-        customMealRepository.deleteMeal(id);
+        mealRepository.deleteById(id);
     }
 }
